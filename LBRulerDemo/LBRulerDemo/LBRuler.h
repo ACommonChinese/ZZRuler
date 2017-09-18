@@ -28,12 +28,6 @@
 
 @interface LBRuler : UIView
 
-/// 当前刻度
-@property (nonatomic, readonly) NSInteger currentCount;
-
-/// 当前值
-@property (nonatomic, readonly) CGFloat value;
-
 @property (nonatomic, assign) id<LBRulerDelegate> delegate;
 
 - (void)showWithConfig:(LBRulerConfig *)config;
