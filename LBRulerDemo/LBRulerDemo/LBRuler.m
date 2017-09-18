@@ -60,7 +60,7 @@
     LBResetRulerInfo *info = [[LBResetRulerInfo alloc] init];
     info.currentCount      = roundf(offsetX / self.config.stepLength);
     info.value             = info.currentCount * self.config.unitValue;
-    info.contentOffset     = CGPointMake(info.currentCount * self.config.stepLength - self.frame.size.width / 2.0, 0);
+    info.contentOffset     = CGPointMake(info.currentCount * self.config.stepLength - self.config.lineWidth / 2.0 - self.frame.size.width / 2.0, 0);
     return info;
 }
 

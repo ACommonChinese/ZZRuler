@@ -28,6 +28,9 @@
 /// 刻度线长度
 @property (nonatomic) CGFloat lineLength;
 
+/// 刻度线宽度
+@property (nonatomic) CGFloat lineWidth;
+
 /// 刻度线颜色
 @property (nonatomic) UIColor *lineColor;
 

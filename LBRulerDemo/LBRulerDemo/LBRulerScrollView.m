@@ -19,7 +19,7 @@
     shapeLayer1.strokeColor   = config.lineColor.CGColor;
     shapeLayer2.strokeColor   = config.separatorLineColor.CGColor;
     shapeLayer1.fillColor     = shapeLayer2.fillColor = [UIColor clearColor].CGColor;
-    shapeLayer1.lineWidth     = shapeLayer2.lineWidth = 1.0f;
+    shapeLayer1.lineWidth     = shapeLayer2.lineWidth = config.lineWidth;
     shapeLayer1.lineCap       = shapeLayer2.lineCap   = kCALineCapButt;
     
     CGFloat width = self.bounds.size.width;

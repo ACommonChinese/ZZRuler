@@ -18,6 +18,7 @@
     self.separatorCount      = 10;
     self.stepLength          = 8;
     self.lineLength          = 25;
+    self.lineWidth           = 1.0;
     self.separatorLineLength = 40;
     self.markLineLength      = 40;
     self.markLineColor       = [UIColor orangeColor];
