@@ -12,7 +12,7 @@
 @interface ViewController () <LBRulerDelegate>
 
 @property (weak, nonatomic) IBOutlet UILabel *label;
-
+@property (nonatomic) LBRuler *ruler;
 @end
 
 @implementation ViewController
@@ -20,24 +20,29 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    LBRuler *ruler = [[LBRuler alloc] initWithFrame:CGRectMake(10, 200, [UIScreen mainScreen].bounds.size.width - 20, 60)];
-    ruler.delegate = self;
-    [ruler showWithConfig:nil];
+    self.ruler            = [[LBRuler alloc] initWithFrame:CGRectMake(10, 200, [UIScreen mainScreen].bounds.size.width - 20, 60)];
+    self.ruler.delegate   = self;
+    LBRulerConfig *config = [[LBRulerConfig alloc] init];
+    config.minCount = 8; // 最小刻度
+    config.currentCount   = 10; // 初始刻度
+    [self.ruler showWithConfig:config];
+    // [ruler showWithConfig:nil]; // 使用默认config
+    
+    [self.view addSubview:self.ruler];
+}
 
-    [self.view addSubview:ruler];
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    // 改变刻度
+    [self.ruler refreshCurrentCount:15 animated:YES];
 }
 
 #pragma mark - <LBRulerDelegate>
 
 - (void)ruler:(LBRuler *)ruler getScrollEndInfo:(LBResetRulerInfo *)info {
-//    NSLog(@"%lf", info.value);
-//    NSLog(@"%ld", info.currentCount);
     self.label.text = [NSString stringWithFormat:@"%lf", info.value];
 }
 
 - (void)ruler:(LBRuler *)ruler getScrollingInfo:(LBResetRulerInfo *)info {
-//    NSLog(@"%lf", info.value);
-//    NSLog(@"%ld", info.currentCount);
      self.label.text = [NSString stringWithFormat:@"%lf", info.value];
 }
 

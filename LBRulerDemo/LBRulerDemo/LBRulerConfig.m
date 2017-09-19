@@ -13,21 +13,21 @@
 - (instancetype)init {
     self = [super init];
     if (!self) return nil;
+    // Reset default value here
     self.unitValue           = 100.0f;
     self.count               = 40;
     self.separatorCount      = 10;
     self.stepLength          = 8;
     self.lineLength          = 25;
+    self.minCount            = 0;
     self.lineWidth           = 1.0;
-    self.separatorLineLength = 40;
-    self.markLineLength      = 40;
+    self.separatorLineLength = self.markLineLength = 40;
+    self.currentCount        = 0;
     self.markLineColor       = [UIColor orangeColor];
     self.markFontColor       = [UIColor darkGrayColor];
-    self.lineColor           = [UIColor lightGrayColor];
-    self.separatorLineColor  = [UIColor lightGrayColor];
-    self.bottomSeparatorLineColor  = [UIColor lightGrayColor];
+    self.lineColor           = self.separatorLineColor = self.bottomSeparatorLineColor = [UIColor lightGrayColor];
+    self.markFont            = [UIFont systemFontOfSize:13.0f];
     self.bottomSeparatorLineHeight = 0.8;
-    self.markFont = [UIFont systemFontOfSize:13.0f];
     return self;
 }
 

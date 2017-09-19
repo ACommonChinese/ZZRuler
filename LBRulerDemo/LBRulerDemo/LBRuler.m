@@ -41,33 +41,63 @@
     [self.rulerScrollView showWithConfig:configure];
     [self addSubview:self.rulerScrollView];
     
+    self.backgroundColor = [UIColor yellowColor];
+    
     // 居中指示线
-    UIView *indicatorView = [[UIView alloc] initWithFrame:CGRectMake(CGRectGetMidX(self.bounds), self.bounds.size.height - configure.markLineLength, 1, configure.markLineLength)];
-    indicatorView.backgroundColor = configure.markLineColor;
-    [self addSubview:indicatorView];
+    CAShapeLayer *shapeLayerLine = [CAShapeLayer layer];
+    shapeLayerLine.strokeColor   = [UIColor redColor].CGColor;
+    shapeLayerLine.fillColor     = [UIColor redColor].CGColor;
+    shapeLayerLine.lineWidth     = 1.f;
+    shapeLayerLine.lineCap       = kCALineCapSquare;
+    CGMutablePathRef pathRef     = CGPathCreateMutable();
+    CGFloat width = self.frame.size.width;
+    CGFloat height = self.frame.size.height;
+    CGPathMoveToPoint(pathRef, NULL, width / 2.0, height - configure.markLineLength);
+    CGPathAddLineToPoint(pathRef, NULL, width / 2.0, height);
+    shapeLayerLine.path = pathRef;
+    [self.layer addSublayer:shapeLayerLine];
     
     // 底部分隔线
     UIView *bottomSeparatorView = [[UIView alloc] initWithFrame:CGRectMake(0, self.bounds.size.height, self.bounds.size.width, configure.bottomSeparatorLineHeight)];
     bottomSeparatorView.backgroundColor = configure.bottomSeparatorLineColor;
     [self addSubview:bottomSeparatorView];
+    
+    [self refreshCurrentCount:configure.currentCount animated:NO];
+}
+
+- (void)refreshCurrentCount:(NSInteger)count animated:(BOOL)animate {
+    NSAssert(count <= self.config.count, @"当前指示刻度不可大于最大刻度");
+    CGFloat offsetX = MAX(count, self.config.minCount) * self.config.stepLength;
+    CGPoint offset = self.rulerScrollView.contentOffset;
+    offset.x = offsetX - CGRectGetMidX(self.bounds);
+    if (animate) {
+        [UIView animateWithDuration:.25 animations:^{
+            [self.rulerScrollView setContentOffset:offset];
+        } completion:nil];
+    } else {
+        [self.rulerScrollView setContentOffset:offset];
+    }
 }
 
 - (LBResetRulerInfo *)getInfo {
     CGFloat offsetX = self.rulerScrollView.contentOffset.x + self.frame.size.width / 2.0;
+    NSInteger currentCount = [[NSNumber numberWithFloat:roundf(offsetX / self.config.stepLength)] integerValue];
     if (offsetX < 0.f || offsetX > self.rulerScrollView.contentSize.width) {
         return nil;
     }
     LBResetRulerInfo *info = [[LBResetRulerInfo alloc] init];
-    info.currentCount      = roundf(offsetX / self.config.stepLength);
+    info.valid             = currentCount >= self.config.minCount;
+    CGFloat minCount       = self.config.minCount;
+    info.currentCount      = MAX(currentCount, minCount);
     info.value             = info.currentCount * self.config.unitValue;
-    info.contentOffset     = CGPointMake(info.currentCount * self.config.stepLength - self.config.lineWidth / 2.0 - self.frame.size.width / 2.0, 0);
+    info.contentOffset     = CGPointMake(info.currentCount * self.config.stepLength - self.frame.size.width / 2.0, 0);
     return info;
 }
 
 #pragma mark - <UIScrollViewDelegate>
 - (void)scrollViewDidScroll:(LBRulerScrollView *)scrollView {
     LBResetRulerInfo *info = [self getInfo];
-    if (!info) return;
+    if (!info || !info.isValid) return;
     if (self.delegate && [self.delegate respondsToSelector:@selector(ruler:getScrollingInfo:)]) {
         [self.delegate ruler:self getScrollingInfo:info];
     }

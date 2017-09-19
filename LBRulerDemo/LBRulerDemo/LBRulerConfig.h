@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+/// 配置文件：在init中设置default值
 @interface LBRulerConfig : NSObject
 
 /// 单位
@@ -18,6 +19,9 @@
 
 /// 刻度数量(个)
 @property (nonatomic) NSInteger count;
+
+/// 最小刻度数量(个)
+@property (nonatomic) NSInteger minCount;
 
 /// 初始刻度
 @property (nonatomic) NSInteger currentCount;
